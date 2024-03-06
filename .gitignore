@@ -1,0 +1,8 @@
+#ignore python env
+.env
+
+#ignore python cache
+._pycache_
+
+#ignore python venv
+.venv
