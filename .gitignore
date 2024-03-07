@@ -6,3 +6,4 @@
 
 #ignore python venv
 .venv
+/Bank_Application/Bank_Application/__pycache__
