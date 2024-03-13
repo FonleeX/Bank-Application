@@ -4,11 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Simpler Banking</title>
     <link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
 </head>
 <body>
-    <h1>Welcome to the Home Page</h1>
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <h1>Simpler Banking</h1>
+            </div>
+            <div class="header-right">
+                <button class="button">Login</button>
+                <button class="button">Register</button>
+                
+            </div>
+        </div>
+    </header>
     
+    <div class = "main">
+        <div class="main-container-left">
+            <h1>Welcome to Simpler Banking</h1>
+            <p>Thanks to Simpler Banking, You can effortlessly manage your bank accounts.</p>
+        </div>
+        <div class="main-container-right">
+            <img class="bank-image" src="{% static 'home\bank-building.png' %}" alt="BankingBuildingImage">
+        </div>
+    </div>
 </body>
 </html>
