@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<title>Simpler Banking Register</title>
+<link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
+{% endblock %}
+
+
+{% block main %}
+<div class = "main">
+    <div class="main-container-left">
+        <h1>User Register</h1>
+        <from method="POST" >
+            {% csrf_token %}
+            <button type="submit">Create Account</button>
+        </from>
+        </div>
+</div>
+{% endblock %}
