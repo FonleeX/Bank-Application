@@ -21,5 +21,5 @@ from banking.views import redirect_to_home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', redirect_to_home),
-    path('banking/', include('banking.urls')),
+    path('banking/', include('banking.urls', namespace='banking')),
 ]

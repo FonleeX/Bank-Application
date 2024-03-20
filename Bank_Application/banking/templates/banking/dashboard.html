@@ -9,12 +9,7 @@
 {% block main %}
 <div class = "main">
     <div class="main-container-left">
-        <h1>Login Page</h1>
-        <form method="POST" action="{% url 'banking:login' %}" >
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Sign In</button>
-        </form>
-        </div>
+        <h1>Welcome, {{ user.first_name}} {{user.last_name}}!</h1>
+    </div>
 </div>
 {% endblock %}

@@ -1,19 +1,37 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+from .managers import UserManager
 
-# Create your models here.
-class Customer(models.Model):
-    first_name = models.CharField(max_length=100)
+class User(AbstractUser):
+    username = None
+    email = models.EmailField(unique=True, max_length = 254)
     middle_name = models.CharField(max_length=100, null=True,)
-    last_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     date_of_birth = models.DateField(null=True)
-    city = models.CharField(max_length = 64, defualt="Lincoln")
-    address = models.TextField(max_length=200, defualt="Brayford Pool")
-    postcode = models.CharField(max_length=8, )
-    #postcode
-    
+    city = models.CharField(max_length = 64, default="Lincoln")
+    address = models.CharField(max_length=200, default="Brayford Pool")
+    postcode = models.CharField(max_length=8, default="LN6 7TS")
 
-    email = models.EmailField(unique=True, max_length = 254)
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return self.email
+
+
+class BankAccount(models.Model):
+    user = models.OneToOneField(
+        User,
+        related_name='account',
+        on_delete=models.CASCADE,
+    )
+    account_type = models.CharField(max_length = 32, default="Personal")
+    account_number = models.PositiveIntegerField(unique=True)
+    account_sort_code = models.PositiveIntegerField(unique=True)
+    balance = models.DecimalField(
+        default=0,
+        max_digits=12,
+        decimal_places=2
+    )

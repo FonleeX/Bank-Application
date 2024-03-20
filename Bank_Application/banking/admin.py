@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model
+from .models import BankAccount
 
-# Register your models here.
-from .models import Customer
+User = get_user_model()
 
-admin.site.register(Customer)
+admin.site.register(User)
+admin.site.register(BankAccount)

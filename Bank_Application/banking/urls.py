@@ -1,8 +1,12 @@
 from django.urls import path
-from .views import home, register, login
+from .views import home, UserRegistrationView, UserLoginView, UserDashboard
+
+app_name = 'banking'
+
 
 urlpatterns = [
     path('', home, name='home'),
-    path('register/',register, name="register" ),
-    path('login/',login, name="login" ),
+    path('register/', UserRegistrationView.as_view(), name="register" ),
+    path('login/', UserLoginView.as_view(), name="login" ),
+    path('dashboard/<str:email>/', UserDashboard, name='dashboard'),
 ]
