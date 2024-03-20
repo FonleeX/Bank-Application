@@ -2,3 +2,5 @@
 /Bank_Application/Bank_Application/__pycache__
 /Bank_Application/banking/__pycache__
 /Bank_Application/banking/migrations/__pycache__
+/Bank_Application/transaction/__pycache__/
+/Bank_Application/transaction/migrations/__pycache__/

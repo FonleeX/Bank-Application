@@ -52,13 +52,13 @@ class UserLoginView(LoginView):
     redirect_authenticated_user=True
     def get_success_url(self):
         # Assuming 'dashboard' is the name of the URL pattern for the user dashboard
-        return reverse_lazy('banking:dashboard', kwargs={'email': self.request.user.email})
+        return reverse_lazy('banking:dashboard')
 
 @login_required
-def UserDashboard(request, email):
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        raise Http404("User does not exist")
+def UserDashboard(request):
+    return render(request, 'dashboard.html')
 
-    return render(request, 'banking/dashboard.html', {'user': user})
+@login_required
+def UserLogout(request):
+    logout(request)
+    return redirect('/')
