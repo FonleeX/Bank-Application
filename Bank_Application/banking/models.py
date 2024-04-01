@@ -14,9 +14,9 @@ class User(AbstractUser):
     middle_name = models.CharField(max_length=100, null=True,)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     date_of_birth = models.DateField(null=True)
-    city = models.CharField(max_length = 64, default="Lincoln")
-    address = models.CharField(max_length=200, default="Brayford Pool")
-    postcode = models.CharField(max_length=8, default="LN6 7TS")
+    #city = models.CharField(max_length = 64, default="Lincoln")
+    #address = models.CharField(max_length=200, default="Brayford Pool")
+    #postcode = models.CharField(max_length=8, default="LN6 7TS")
 
     objects = UserManager()
 
@@ -98,12 +98,12 @@ class BankAccount(models.Model):
             12 / self.account_type.interest_calculation_per_year
         )
         start = self.interest_start_date.month
-        return [i for i in range(start, 13 interval)]
+        return [i for i in range(start, 13, interval)]
     
 class UserAddress(models.Model):
     user = models.OneToOneField(
         User,
-        related_name='address'
+        related_name='address',
         on_delete=models.CASCADE,
     )
     street_address = models.CharField(max_length=512)

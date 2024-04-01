@@ -2,6 +2,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -24,7 +25,7 @@ def UserPayemnts(request):
 def UserDetails(request):
     return render(request, 'details.html')
 
-class TransactionRepostView(login_required, ListView):
+class TransactionRepostView(LoginRequiredMixin, ListView):
     template_name = 'transactions/transaction_report.html'
     model = Transaction
     form_data = {}
@@ -54,7 +55,7 @@ class TransactionRepostView(login_required, ListView):
         })
         return context
     
-class TransactionCreateMixin(login_required, CreateView):
+class TransactionCreateMixin(LoginRequiredMixin, CreateView):
     template_name = 'transactions/transaction_form.html'
     model = Transaction
     title = ''
