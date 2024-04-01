@@ -23,5 +23,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomeView.as_view(), name='home'),
     path('banking/', include('banking.urls', namespace='banking')),
-    path('transaction/', include('transaction.urls', namespace='transaction')),
 ]

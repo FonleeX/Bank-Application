@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<title>Simpler Banking Login</title>
+<link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
+{% endblock %}
+
+
+{% block main %}
+<div class = "main">
+    <div class="main-container-left">
+        <h1>Welcome, {{ user.first_name}} {{user.last_name}}!</h1>
+    </div>
+</div>
+{% endblock %}
