@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
-from django.contrib.auth import get_user_model, authenticate ,logout, login
+from django.contrib.auth import get_user_model, authenticate ,logout
 from django.views.generic import TemplateView, RedirectView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
@@ -15,14 +15,12 @@ from django.urls import reverse_lazy
 User = get_user_model()
 
 # Create your views here.
-#def home(request):
-    #return render(request, 'banking/home.html')
+def home(request):
+    return render(request, 'banking/home.html')
 
-#def redirect_to_home(request):
-    #return redirect('banking:home')
+def redirect_to_home(request):
+    return redirect('banking:home')
 
-class HomeView(TemplateView):
-    template_name = 'banking/index.html'
 
 class UserRegistrationView(TemplateView):
     model = User
@@ -52,7 +50,7 @@ class UserRegistrationView(TemplateView):
                     f'Your Account Number is {user.account.account_no}'
                 )   
             )
-            return HttpResponseRedirect(reverse_lazy('transactions:deposit_money'))
+            return HttpResponseRedirect(reverse_lazy('banking:login'))
         else: 
             messages.error(request, "Error")
         return self.render_to_response(self.get_context_data(registration_form=registration_form, address_form=address_form))
@@ -64,28 +62,18 @@ class UserRegistrationView(TemplateView):
             kwargs['address_form'] = UserAddressForm()
         return super().get_context_data(**kwargs)
 
-#class UserLoginView(LoginView):
-    #template_name='banking/login.html'
-    #redirect_authenticated_user=True
-    #def get_success_url(self):
-        # Assuming 'dashboard' is the name of the URL pattern for the user dashboard
-        #return reverse_lazy('banking:dashboard')
-
-#@login_required
-#def UserDashboard(request):
-    #return render(request, 'dashboard.html')
 class UserLoginView(LoginView):
     template_name='banking/login.html'
-    redirect_authenticated_user = False
+    redirect_authenticated_user=True
+    def get_success_url(self):
+        # Assuming 'dashboard' is the name of the URL pattern for the user dashboard
+        return reverse_lazy('banking:dashboard')
 
-#@login_required
-#def UserLogout(request):
-    #logout(request)
-    #return redirect('/')
-class UserLogoutView(RedirectView):
-    pattern_name = 'home'
+@login_required
+def UserDashboard(request):
+    return render(request, 'dashboard.html')
 
-    def get_redirect_url(self, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            logout(self.request)
-        return super().get_redirect_url(*args, **kwargs)
+@login_required
+def UserLogout(request):
+    logout(request)
+    return redirect('/')

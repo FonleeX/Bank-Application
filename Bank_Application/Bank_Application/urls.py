@@ -16,12 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-#from banking.views import redirect_to_home
-from banking.views import HomeView
+from banking.views import redirect_to_home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', HomeView.as_view(), name='home'),
+    path('', redirect_to_home),
     path('banking/', include('banking.urls', namespace='banking')),
     path('transaction/', include('transaction.urls', namespace='transaction')),
 ]
