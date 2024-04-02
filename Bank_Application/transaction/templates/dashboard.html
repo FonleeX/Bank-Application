@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<title>Simpler Banking Login</title>
+<link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
+{% endblock %}
+
+{% block header%}
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <h1>Simpler Banking</h1>
+                <button class="button"><a href="{% url 'banking:dashboard' %}" >Account</a></button>
+                <button class="button"><a href="{% url 'transaction:payments' %}" >Payments</a></button>
+            </div>
+            <div class="header-right">
+                <button class="button"><a href="{% url 'banking:logout' %}" >Log Out</a></button>
+                <button class="button"><a href="{% url 'transaction:details' %}" >Profile</a></button>
+                
+            </div>
+        </div>
+    </header>
+    {% endblock %}
+
+{% block main %}
+<div class = "main">
+    <div class="main-container-left">
+        <h1>Welcome, {{ user.first_name}} {{user.last_name}}!</h1>
+    </div>
+</div>
+{% endblock %}

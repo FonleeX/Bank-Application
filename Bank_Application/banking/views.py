@@ -76,7 +76,6 @@ class UserRegistrationView(TemplateView):
     #return render(request, 'dashboard.html')
 class UserLoginView(LoginView):
     template_name='banking/login.html'
-<<<<<<< HEAD
     redirect_authenticated_user = False
 
 #@login_required
@@ -90,18 +89,3 @@ class UserLogoutView(RedirectView):
         if self.request.user.is_authenticated:
             logout(self.request)
         return super().get_redirect_url(*args, **kwargs)
-=======
-    redirect_authenticated_user=True
-    def get_success_url(self):
-        # Assuming 'dashboard' is the name of the URL pattern for the user dashboard
-        return reverse_lazy('banking:dashboard', kwargs={'email': self.request.user.email})
-
-@login_required
-def UserDashboard(request, email):
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        raise Http404("User does not exist")
-
-    return render(request, 'banking/dashboard.html', {'user': user})
->>>>>>> parent of 4f2664c (Logout Function & Transaction App)
