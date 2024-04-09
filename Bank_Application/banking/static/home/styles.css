@@ -4,10 +4,11 @@
     border-style: solid;
     border-color: rgb(245, 245, 245, 0);
     border-radius:25px;
-    height: 55%;
+    height: 45%;
     width: 115px;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
 .button:hover {

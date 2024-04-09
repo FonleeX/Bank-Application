@@ -3,6 +3,7 @@
 {% block head %}
 <title>Simpler Banking Login</title>
 <link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'home\details-styles.css' %}">
 {% endblock %}
 
 {% block header%}
@@ -23,9 +24,23 @@
     {% endblock %}
 
 {% block main %}
-<div class = "main">
-    <div class="main-container-left">
-        <h1>Account Details</h1>
+<div class = "details-main">
+    <h1 >Account Details</h1>
+    <div class = "details-container">
+        <div class="details-container-left">
+            <h2>Profile Details</h2>
+            <form method="POST" >
+                {% csrf_token %}
+                {{update_form.as_p}}
+                <button type="submit">Update Details</button>
+            </form>
+        </div>
+        <div class="details-container-right">
+            <h2>Bank Details</h2>
+            <p style="text-transform: capitalize;">Account Type:    {{user.account.account_type}}
+            <p>Account Number:    {{user.account.account_number}}</p>
+            <p>Account Sort-Code:    {{user.account.account_sort_code}}</p>
+        </div>
     </div>
 </div>
 {% endblock %}
