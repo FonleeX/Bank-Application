@@ -5,10 +5,11 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.views.generic import TemplateView
 from .forms import UserUpdateForm
+from django.contrib import messages
+from django.urls import reverse_lazy
+from .models import Transaction
 
 User = get_user_model()
-
-
 
 @login_required
 def UserPayemnts(request):

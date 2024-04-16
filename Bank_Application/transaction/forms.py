@@ -2,6 +2,8 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 from banking.models import User
+from .models import Transaction
+from django.db import transaction
 
 class UserUpdateForm(UserCreationForm):
     birth_date = forms.DateField(input_formats=['%Y-%m-%d'])
@@ -19,3 +21,5 @@ class UserUpdateForm(UserCreationForm):
             'address',
             'postcode',
         ]
+
+
