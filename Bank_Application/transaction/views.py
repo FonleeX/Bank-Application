@@ -1,10 +1,13 @@
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.views.generic import TemplateView
-from .forms import UserUpdateForm
+from django.views.generic.edit import CreateView
+from .forms import UserUpdateForm, DepositForm
 from django.contrib import messages
 from django.urls import reverse_lazy
 from .models import Transaction
@@ -43,3 +46,25 @@ class UserUpdateView(TemplateView):
         if 'update_form' not in kwargs:
             kwargs['update_form'] = UserUpdateForm()
         return super().get_context_data(**kwargs)
+    
+
+class DepositTransactionView(CreateView):
+    model = Transaction
+    form_class = DepositForm
+    template_name = 'payments.html'
+    success_url = reverse_lazy('banking:dashboard')
+
+    def form_valid(self, form):
+
+        transaction = form.save(commit=False)
+
+        account = transaction.account
+        if account:
+            account.balance += transaction.amount
+            account.save()
+
+
+        transaction.balance_after_transaction = account.balance
+        transaction.save()
+
+        return super().form_valid(form)

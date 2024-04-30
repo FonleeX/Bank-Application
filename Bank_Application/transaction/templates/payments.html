@@ -26,6 +26,11 @@
 <div class = "main">
     <div class="main-container-left">
         <h1>Deposit & Withdraw</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit Deposit</button>
+        </form>
     </div>
 </div>
 {% endblock %}
