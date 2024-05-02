@@ -2,7 +2,7 @@ from django.forms import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.views.generic import TemplateView
@@ -10,7 +10,8 @@ from django.views.generic.edit import CreateView
 from .forms import UserUpdateForm, DepositForm
 from django.contrib import messages
 from django.urls import reverse_lazy
-from .models import Transaction
+from .models import Transaction 
+from banking.models import BankAccount
 
 User = get_user_model()
 
@@ -58,7 +59,7 @@ class DepositTransactionView(CreateView):
 
         transaction = form.save(commit=False)
 
-        account = transaction.account
+        account = instance.account
         if account:
             account.balance += transaction.amount
             account.save()
@@ -68,3 +69,28 @@ class DepositTransactionView(CreateView):
         transaction.save()
 
         return super().form_valid(form)
+
+
+@login_required
+def UserDepositView(request):
+    if request.method == 'POST':
+        form = DepositForm(request.POST)
+        if form.is_valid():
+            account = get_object_or_404(BankAccount, user=request.user)
+            if not account:
+                return  HttpResponse("Error in Deposit")
+            
+            transaction = form.save(commit=False)
+            transaction.account = account
+            # Update the account balance
+            account.balance += transaction.amount
+            account.save()
+
+            transaction.balance_after_transaction = account.balance
+            transaction.save()
+            
+            return redirect('banking:dashboard')
+    else:
+        form = DepositForm()
+
+    return render(request, 'payments.html', {'form': form})

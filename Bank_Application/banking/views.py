@@ -9,7 +9,8 @@ from django.shortcuts import HttpResponseRedirect
 from .forms import UserRegistrationForm
 from django.http import Http404
 from django.urls import reverse_lazy
-
+from .models import BankAccount
+from transaction.models import Transaction
 
 
 User = get_user_model()
@@ -56,7 +57,16 @@ class UserLoginView(LoginView):
 
 @login_required
 def UserDashboard(request):
-    return render(request, 'dashboard.html')
+    # Get the user's bank account
+    user_account = BankAccount.objects.filter(user=request.user).first()
+    
+    # If the user has an account, get their transactions
+    transactions = Transaction.objects.filter(account=user_account).order_by('-timestamp')  # Order by newest
+
+    return render(request, 'dashboard.html', {
+        'user': request.user,
+        'transactions': transactions,
+    })
 
 @login_required
 def UserLogout(request):

@@ -3,6 +3,7 @@
 {% block head %}
 <title>Simpler Banking Login</title>
 <link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'home\dashboard-styles.css' %}">
 {% endblock %}
 
 {% block header%}
@@ -23,11 +24,30 @@
     {% endblock %}
 
 {% block main %}
-<div class = "main">
-    <div class="main-container-left">
-        <h1>Welcome, {{ user.first_name}} {{user.last_name}}!</h1>
+<div class="dashboard-main">
+    <h1>{{ user.first_name}} {{user.last_name}}!</h1>
         <h2> Account balance:    {{user.account.balance}}
         
-    </div>
+        <h2>Recent Transactions</h2>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance After Transaction</th>
+                <th>Date</th>
+            </tr>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.get_transaction_type_display }}</td>  <!-- Display readable type -->
+                <td>{{ transaction.amount }}</td>
+                <td>{{ transaction.balance_after_transaction }}</td>
+                <td>{{ transaction.timestamp }}</td>  <!-- Date of the transaction -->
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No transactions found</td>  <!-- Handle case where there are no transactions -->
+            </tr>
+            {% endfor %}
+        </table>
 </div>
 {% endblock %}

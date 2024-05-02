@@ -4,9 +4,10 @@ from banking.models import BankAccount
 class Transaction(models.Model):
 
     TRANSACTION_TYPE_CHOICES = (
-        ('DEPOSIT', 'Deposit'),
-        ('WITHDRAWAL', 'Withdrawal'),
-        ('INTEREST', 'Interest'),
+        (0, 'Deposit'),
+        (1, 'Withdrawal'),
+        (2, 'Interest'),
+        (3, 'Transfer'),
     )
 
 

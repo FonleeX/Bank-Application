@@ -25,7 +25,7 @@ class UserUpdateForm(UserCreationForm):
 class DepositForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['account', 'amount']
+        fields = ['amount']
     
     def clean(self):
         cleaned_data = super().clean()
@@ -39,12 +39,6 @@ class DepositForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.transaction_type = 0
-        account = instance.account
-
-        if account:
-            current_balance = account.balance
-            instance.balance_after_transaction = current_balance + instance.amount
-
 
         if commit:
             instance.save()

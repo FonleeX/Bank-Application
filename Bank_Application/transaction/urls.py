@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import UserPayemnts, UserDetails, UserUpdateView, DepositTransactionView
+from .views import UserUpdateView, UserDepositView
 
 app_name = 'transaction'
 
 
 urlpatterns = [
-    path('payments/', DepositTransactionView.as_view(), name="payments" ),
+    path('payments/', UserDepositView, name="payments" ),
     #path('details/', UserDetails, name="details" ),
     path('details/', UserUpdateView.as_view(), name="details")
 
