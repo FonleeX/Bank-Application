@@ -7,22 +7,13 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
-from .forms import UserUpdateForm, DepositForm
+from .forms import UserUpdateForm, DepositForm, WithdrawalForm, TransferForm
 from django.contrib import messages
 from django.urls import reverse_lazy
 from .models import Transaction 
 from banking.models import BankAccount
 
 User = get_user_model()
-
-@login_required
-def UserPayemnts(request):
-    return render(request, 'payments.html')
-
-
-@login_required
-def UserDetails(request):
-    return render(request, 'details.html')
 
 class UserUpdateView(TemplateView):
     model = User
@@ -49,48 +40,43 @@ class UserUpdateView(TemplateView):
         return super().get_context_data(**kwargs)
     
 
-class DepositTransactionView(CreateView):
-    model = Transaction
-    form_class = DepositForm
-    template_name = 'payments.html'
-    success_url = reverse_lazy('banking:dashboard')
-
-    def form_valid(self, form):
-
-        transaction = form.save(commit=False)
-
-        account = instance.account
-        if account:
-            account.balance += transaction.amount
-            account.save()
-
-
-        transaction.balance_after_transaction = account.balance
-        transaction.save()
-
-        return super().form_valid(form)
-
-
 @login_required
-def UserDepositView(request):
+def UserTransactionView(request):
+    account = get_object_or_404(BankAccount, user=request.user)
+
+    deposit_form = DepositForm(account=account)
+    withdrawal_form = WithdrawalForm(account=account)
+    transfer_form = TransferForm(account=account)
+
     if request.method == 'POST':
-        form = DepositForm(request.POST)
-        if form.is_valid():
-            account = get_object_or_404(BankAccount, user=request.user)
-            if not account:
-                return  HttpResponse("Error in Deposit")
-            
-            transaction = form.save(commit=False)
-            transaction.account = account
-            # Update the account balance
-            account.balance += transaction.amount
-            account.save()
+        if 'deposit' in request.POST:
+            deposit_form = DepositForm(request.POST, account=account) 
+            if deposit_form.is_valid():
+                deposit_form.save()
+                messages.success(request, "Deposit successful!")
+                return redirect('banking:dashboard')
 
-            transaction.balance_after_transaction = account.balance
-            transaction.save()
+        elif 'withdrawal' in request.POST:
+            withdrawal_form = WithdrawalForm(request.POST, account=account)  
+            if withdrawal_form.is_valid():
+                withdrawal_form.save()
+                messages.success(request, "Withdrawal successful!")
+                return redirect('banking:dashboard')
             
-            return redirect('banking:dashboard')
-    else:
-        form = DepositForm()
-
-    return render(request, 'payments.html', {'form': form})
+        elif 'transfer' in request.POST:
+            transfer_form = TransferForm(request.POST, account=account)
+            if transfer_form.is_valid():
+                transfer_form.save()
+                messages.success(request, "Transfer successful!")
+                return redirect('banking:dashboard')
+            
+    return render(
+        request,
+        'payments.html',
+        {
+            'deposit_form': deposit_form,
+            'withdrawal_form': withdrawal_form,
+            'transfer_form': transfer_form,
+        }
+    )
+    

@@ -1,20 +1,47 @@
-.button{
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap');
+body{
+    color: whitesmoke;
+    background: rgb(25,2,59);
+    background: linear-gradient(90deg, rgba(25,2,59,1) 0%, rgba(46,2,59,1) 70%, rgba(59,2,44,1) 100%);
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+header{
+    color: #cc7df3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: rgb(25,2,59);
+    background: linear-gradient(90deg, rgba(25,2,59,1) 0%, rgba(46,2,59,1) 70%, rgba(59,2,44,1) 100%);
+    box-shadow: 0 4px 8px rgb(0 0 0/70%);
+}
+
+
+.header-button{
     background-color:#cc7df3;
     color: rgba(59,2,44,1);
     border-style: solid;
     border-color: rgb(245, 245, 245, 0);
     border-radius:25px;
-    height: 45%;
+    height: 35%;
     width: 115px;
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
+    text-decoration: none;
+    outline: none;
+    align-content: center;
+    text-align: center;
 }
 
-.button:hover {
+.header-button:hover {
     background-color:rgba(59,2,44,0);
     border-color: rgb(245, 245, 245, 1);
-    border-width: 2px;
     color: whitesmoke;
     transition: 0.4s;
 }
@@ -31,6 +58,7 @@
 .header-container h1{
     font-family: 'Garamond', serif;
     font-size: min(3.6vw, 32px);
+    font-weight: 700;
 }
 
 .header-left{

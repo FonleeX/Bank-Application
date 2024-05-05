@@ -2,6 +2,7 @@
 {% load static %}
 {% block head %}
 <title>Simpler Banking Login</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'home\dashboard-styles.css' %}">
 {% endblock %}
@@ -11,12 +12,12 @@
         <div class="header-container">
             <div class="header-left">
                 <h1>Simpler Banking</h1>
-                <button class="button"><a href="{% url 'banking:dashboard' %}" >Account</a></button>
-                <button class="button"><a href="{% url 'transaction:payments' %}" >Payments</a></button>
+                <a class="header-button" href="{% url 'banking:dashboard' %}" >Account</a>
+                <a class="header-button" href="{% url 'transaction:payments' %}" >Payments</a>
             </div>
             <div class="header-right">
-                <button class="button"><a href="{% url 'banking:logout' %}" >Log Out</a></button>
-                <button class="button"><a href="{% url 'transaction:details' %}" >Profile</a></button>
+                <a class="header-button" href="{% url 'banking:logout' %}" >Log Out</a>
+                <a class="header-button" href="{% url 'transaction:details' %}" >Profile</a>
                 
             </div>
         </div>
@@ -25,29 +26,79 @@
 
 {% block main %}
 <div class="dashboard-main">
-    <h1>{{ user.first_name}} {{user.last_name}}!</h1>
-        <h2> Account balance:    {{user.account.balance}}
-        
-        <h2>Recent Transactions</h2>
+    <h1>{{ user.first_name}} {{user.last_name}}</h1>
+    <p style="margin: 0px;">Your Balance</p>
+    <h2>£{{user.account.balance}}</h2>
+    <h2>Transactions</h2>
+
+    <div class="filter-form">
+        <form method="get" id="filter-form">
+            <div class="row pb-3 al">
+                <div class="col-sm-4 ">{{ filter_form.transaction_type }}</div>
+                <div class="col-sm-4">{{ filter_form.transaction_category }}</div>
+            </div>
+            
+            {{ filter_form.start_date }}
+            {{ filter_form.end_date }}
+            {{ filter_form.min_amount }}
+            {{ filter_form.max_amount }}
+            <button type="submit" >Filter</button>
+            <button type="button" onclick="clearForm()">Clear</button>
+        </form>
+    </div>
+
+
+
+    <div>
         <table>
             <tr>
                 <th>Type</th>
+                <th>Category</th>
                 <th>Amount</th>
                 <th>Balance After Transaction</th>
                 <th>Date</th>
             </tr>
             {% for transaction in transactions %}
             <tr>
-                <td>{{ transaction.get_transaction_type_display }}</td>  <!-- Display readable type -->
+                <td>{{ transaction.get_transaction_type_display }}</td>
+                <td>{{ transaction.get_transaction_category_display }}</td>   
                 <td>{{ transaction.amount }}</td>
                 <td>{{ transaction.balance_after_transaction }}</td>
-                <td>{{ transaction.timestamp }}</td>  <!-- Date of the transaction -->
+                <td>{{ transaction.timestamp }}</td>  
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4">No transactions found</td>  <!-- Handle case where there are no transactions -->
+                <td colspan="4">No transactions found</td> 
             </tr>
             {% endfor %}
         </table>
+    </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function clearForm() {
+        console.log("Clear button clicked");
+        const filterForm = document.getElementById("filter-form");
+        const transactionType = document.getElementById("id_transaction_type");
+        const transactionCategory = document.getElementById("id_transaction_category");
+        const startDate = document.getElementById("id_start_date");
+        const endDate = document.getElementById("id_end_date");
+        const minAmount = document.getElementById("id_min_amount");
+        const maxAmount = document.getElementById("id_max_amount");
+
+        if (filterForm) {
+                transactionType.value = "";
+                transactionCategory.value = "";
+                startDate.value = "";
+                endDate.value = "";
+                minAmount.value = "";
+                maxAmount.value = "";
+            }
+
+        filterForm.submit()
+}
+</script>
 {% endblock %}

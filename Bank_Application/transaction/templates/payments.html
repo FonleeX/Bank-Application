@@ -2,7 +2,9 @@
 {% load static %}
 {% block head %}
 <title>Simpler Banking Login</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'home\payments-styles.css' %}">
 {% endblock %}
 
 {% block header%}
@@ -10,27 +12,107 @@
         <div class="header-container">
             <div class="header-left">
                 <h1>Simpler Banking</h1>
-                <button class="button"><a href="{% url 'banking:dashboard' %}" >Account</a></button>
-                <button class="button"><a href="{% url 'transaction:payments' %}" >Payments</a></button>
+                <a class="header-button" href="{% url 'banking:dashboard' %}" >Account</a>
+                <a class="header-button" href="{% url 'transaction:payments' %}" >Payments</a>
             </div>
             <div class="header-right">
-                <button class="button"><a href="{% url 'banking:logout' %}" >Log Out</a></button>
-                <button class="button"><a href="{% url 'transaction:details' %}" >Profile</a></button>
-                
+                <a class="header-button" href="{% url 'banking:logout' %}" >Log Out</a>
+                <a class="header-button" href="{% url 'transaction:details' %}" >Profile</a>
             </div>
         </div>
     </header>
     {% endblock %}
 
 {% block main %}
-<div class = "main">
-    <div class="main-container-left">
-        <h1>Deposit & Withdraw</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit Deposit</button>
-        </form>
-    </div>
+<div class = "payments-main">
+        <div>
+            <select class="select-type" id="transaction-select">
+                <option value="">Select Transaction Type</option>
+                <option value="deposit">Deposit</option>
+                <option value="withdrawal">Withdrawal</option>
+                <option value="transfer">Transfer</option>
+            </select>
+        </div>
+
+        <div class="transaction-forms">
+            <form method="post">
+                {% if deposit_form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ deposit_form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div  id="deposit-form" style="display: none;"> 
+                    {% csrf_token %}
+                    <input type="hidden" name="deposit" value="1">
+                    <div class="col-sm-6 pb-3">{{ deposit_form.amount }}</div>
+                    <div class="col-sm-6"><button type="submit">Submit</button></div>
+                </div>
+            </form>
+
+            <form method="post">
+                {% if withdrawal_form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ withdrawal_form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div id="withdrawal-form" style="display: none;">
+                    {% csrf_token %}
+                    <input type="hidden" name="withdrawal" value="1">
+                    <div class="col-sm-6 pb-3">{{ withdrawal_form.amount }}</div>
+                    <div class="col-sm-6 " ><button type="submit">Submit</button> </div>
+                </div>
+            </form>
+
+            <form method="post">
+                {% if transfer_form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ transfer_form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div id="transfer-form" style="display: none;">
+                    {% csrf_token %}
+                    <input type="hidden" name="transfer" value="1">
+                    <div class="row pb-3">
+                        <div class="col-sm-6" >{{transfer_form.first_name}}</div>
+                        <div class="col-sm-6">{{transfer_form.last_name}}</div>
+                    </div>
+                    <div class="row pb-3">
+                        <div class="col-sm-6">{{ transfer_form.account_number}}</div>
+                    </div>
+                    <div class="row pb-3">
+                        <div class="col-sm-6">{{ transfer_form.sort_code}}</div>
+                    </div>
+                    <div class="row pb-3">
+                        <div class="col-sm-6">{{ transfer_form.amount}}</div>
+                    </div>  
+                    <div class="col"><button type="submit">Submit</button></div> 
+                </div>
+            </form>
+        </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    document.getElementById('transaction-select').addEventListener('change', function() {
+        var value = this.value;  // Get the selected value
+    
+        // Hide all forms initially
+        document.getElementById('deposit-form').style.display = 'none';
+        document.getElementById('withdrawal-form').style.display = 'none';
+        document.getElementById('transfer-form').style.display = 'none';
+    
+        // Show the form based on the selected value
+        if (value === 'deposit') {
+            document.getElementById('deposit-form').style.display = 'block';
+        } else if (value === 'withdrawal') {
+            document.getElementById('withdrawal-form').style.display = 'block';
+        } else if (value === 'transfer'){
+            document.getElementById('transfer-form').style.display = 'block';
+        }
+    });
+</script>
 {% endblock %}

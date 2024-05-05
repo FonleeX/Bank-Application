@@ -1,0 +1,88 @@
+.payments-main{
+    max-width: 1280px;
+    min-width: 75vw;  /* Use viewport height for minimum height */
+    height: 100%;
+    padding-top: 150px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.transaction-forms{
+    max-width: 800px;
+    width: 65vw;
+    padding-top: 20px;
+}
+
+.transaction-forms input{
+    background-color: transparent;
+    height: 35px;
+    width: 100%;
+    font-size: 18px; 
+    color: whitesmoke;
+    border: 2px solid #ffffff; 
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+
+.transaction-forms input:focus {
+    border: 3px solid #cc7df3;  
+    border-radius: 5px;  
+    background-color: transparent;  
+    color: whitesmoke; 
+    box-shadow: none;
+}
+
+.transaction-forms input:valid {
+    border: 3px solid #cc7df3;  
+    border-radius: 5px;  
+    background-color: #cc7df3;  
+    color: whitesmoke; 
+    box-shadow: none;
+}
+
+
+button{
+    background-color:#cc7df3;
+    color: rgba(59,2,44,1);
+    border-style: solid;
+    border-color: rgb(245, 245, 245, 0);
+    border-radius:25px;
+    height: 35px;
+    width: 115px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+button:hover {
+    background-color:rgba(59,2,44,0);
+    border-color: rgb(245, 245, 245, 1);
+    border-width: 2px;
+    color: whitesmoke;
+    transition: 0.4s;
+}
+
+.select-type{
+    max-width: 800px;
+    width: 65vw;
+    background-color: transparent;
+    border: 1px solid #ccc;  
+    padding: 10px;  
+    font-size: 32px; 
+    color: whitesmoke;
+    border: none;
+    border-bottom: 4px solid whitesmoke;
+}
+
+.select-type option{
+    background-color: rgb(57, 27, 75);
+    color: inherit;
+}
+
+.select-type:hover,
+.select-type:focus {
+    border-color: #666;  /* Changes border color on hover/focus for better visibility */
+}

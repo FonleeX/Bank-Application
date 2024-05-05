@@ -5,27 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body{
-            color: whitesmoke;
-            background: rgb(25,2,59);
-            background: linear-gradient(90deg, rgba(25,2,59,1) 0%, rgba(46,2,59,1) 70%, rgba(59,2,44,1) 100%);
-            }
-        header{
-            color: #cc7df3;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 80px;
-            background: rgb(25,2,59);
-            background: linear-gradient(90deg, rgba(25,2,59,1) 0%, rgba(46,2,59,1) 70%, rgba(59,2,44,1) 100%);
-            box-shadow: 0 4px 8px rgb(0 0 0/70%);
-            }
-        a{
-            color: inherit;
-            text-decoration: none;
-            outline: none;
-        }
+        
     </style>
     <link rel="icon" type="image/png" href="{% static 'home\bank-building.png' %}">
     {% block head %}
@@ -38,11 +18,11 @@
     <header>
         <div class="header-container">
             <div class="header-left">
-                <h1><a href="{% url 'banking:home' %}" >Simpler Banking</a></h1>
+                <a style="font-family: 'Garamond', serif; font-weight: 700; font-size: min(3.6vw, 32px); text-decoration: none; color: #cc7df3;" href="{% url 'banking:home' %}" >Simpler Banking</a></h1>
             </div>
             <div class="header-right">
-                <button class="button"><a href="{% url 'banking:login' %}" >Login</a></button>
-                <button class="button"><a href="{% url 'banking:register' %}" >Register</a></button>
+                <a class="header-button" href="{% url 'banking:login' %}" >Login</a>
+                <a class="header-button" href="{% url 'banking:register' %}" >Register</a>
                 
             </div>
         </div>
@@ -56,4 +36,7 @@
     </div>
     {% endblock %}
 </body>
+{% block javascript %}
+
+{% endblock %}
 </html>
