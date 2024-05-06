@@ -43,37 +43,37 @@ class TransactionFilterForm(forms.Form):
     transaction_type = forms.ChoiceField(
         choices=TRANSACTION_TYPE_CHOICES,
         required=False,
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control form-select form-select-sm'})
     )
 
     transaction_category = forms.ChoiceField(
         choices=TRANSACTION_CATEGORY_CHOICES,
         required=False,
-        widget=forms.Select(attrs={'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control form-select form-select-sm'})
     )
 
     start_date = forms.DateField(
         required=False,
-        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})  # Date input with form-control
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control form-control-sm'})  # Date input with form-control
     )
 
     end_date = forms.DateField(
         required=False,
-        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control form-control-sm'})
     )
 
     min_amount = forms.DecimalField(
         required=False,
         decimal_places=2,
         min_value=0,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})  # Number input with form-control
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Minimum Amount'})  # Number input with form-control
     )
 
     max_amount = forms.DecimalField(
         required=False,
         decimal_places=2,
         min_value=0,
-        widget=forms.NumberInput(attrs={'class': 'form-control'})
+        widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm','placeholder': 'Maximum Amount'})
     )
 
 

@@ -12,6 +12,9 @@ from django.http import Http404
 from django.urls import reverse_lazy
 from .models import BankAccount
 from transaction.models import Transaction
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+
 
 
 User = get_user_model()
@@ -21,6 +24,12 @@ def home(request):
 
 def redirect_to_home(request):
     return redirect('banking:home')
+
+@login_required
+def UserLogout(request):
+    logout(request)
+    return redirect('/')
+
 
 
 class UserRegistrationView(TemplateView):
@@ -60,37 +69,75 @@ def UserDashboard(request):
     filter_form = TransactionFilterForm(request.GET or None)
     transactions = Transaction.objects.filter(account__user=request.user).order_by('-timestamp')  # Order by newest
 
-    if filter_form.is_valid():
-        transaction_type = filter_form.cleaned_data.get("transaction_type")
-        if transaction_type:
-            transactions = transactions.filter(transaction_type=transaction_type)
+    transactions = filterTransactions(transactions, filter_form)
 
-        transaction_category = filter_form.cleaned_data.get("transaction_category")
-        if transaction_category:
-            transactions = transactions.filter(transaction_category=transaction_category)
-
-        start_date = filter_form.cleaned_data.get("start_date")
-        end_date = filter_form.cleaned_data.get("end_date")
-        if start_date:
-            transactions = transactions.filter(timestamp__gte=start_date)
-        if end_date:
-            transactions = transactions.filter(timestamp__lte=end_date)
-
-        min_amount = filter_form.cleaned_data.get("min_amount")
-        max_amount = filter_form.cleaned_data.get("max_amount")
-        if min_amount is not None:
-            transactions = transactions.filter(amount__gte=min_amount)
-        if max_amount is not None:
-            transactions = transactions.filter(amount__lte=max_amount)
+    paginator = Paginator(transactions, 8)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
 
 
     return render(request, 'dashboard.html', {
         'filter_form': filter_form,
         'user': request.user,
         'transactions': transactions,
+        'page_obj': page_obj
     })
 
-@login_required
-def UserLogout(request):
-    logout(request)
-    return redirect('/')
+
+def loadMoreTransactions(request):
+
+    page_number = int(request.GET.get("page", 2))
+
+    filter_form = TransactionFilterForm(request.GET or None)
+    transactions = Transaction.objects.filter(account__user=request.user).order_by('-timestamp')  # Order by newest
+
+    transactions = filterTransactions(transactions, filter_form)
+
+    paginator = Paginator(transactions, 8)
+    page_obj = paginator.get_page(page_number)
+
+    transaction_data = [
+        {
+            "id": t.id,
+            "timestamp": t.timestamp.strftime("%Y-%m-%d %H:%M:%S"),  # Format timestamp
+            "destination_user": f"{t.destination_account.user.first_name} {t.destination_account.user.last_name}"
+            if t.destination_account else "",  # Check if destination account exists
+            "transaction_type_display": t.get_transaction_type_display(),  # Human-readable type
+            "transaction_category_display": t.get_transaction_category_display(),  # Human-readable category
+            "amount": str(t.amount),  # Convert amount to string
+        }
+        for t in page_obj
+    ]
+
+    return JsonResponse({
+        "transactions": transaction_data,
+        "has_next": page_obj.has_next(),
+    })
+
+
+def filterTransactions(transactions, form):
+
+    if form.is_valid():
+        transaction_type = form.cleaned_data.get("transaction_type")
+        if transaction_type:
+            transactions = transactions.filter(transaction_type=transaction_type)
+
+        transaction_category = form.cleaned_data.get("transaction_category")
+        if transaction_category:
+            transactions = transactions.filter(transaction_category=transaction_category)
+
+        start_date = form.cleaned_data.get("start_date")
+        end_date = form.cleaned_data.get("end_date")
+        if start_date:
+            transactions = transactions.filter(timestamp__gte=start_date)
+        if end_date:
+            transactions = transactions.filter(timestamp__lte=end_date)
+
+        min_amount = form.cleaned_data.get("min_amount")
+        max_amount = form.cleaned_data.get("max_amount")
+        if min_amount is not None:
+            transactions = transactions.filter(amount__gte=min_amount)
+        if max_amount is not None:
+            transactions = transactions.filter(amount__lte=max_amount)
+
+    return transactions

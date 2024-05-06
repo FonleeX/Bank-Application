@@ -27,51 +27,86 @@
 {% block main %}
 <div class="dashboard-main">
     <h1>{{ user.first_name}} {{user.last_name}}</h1>
-    <p style="margin: 0px;">Your Balance</p>
-    <h2>£{{user.account.balance}}</h2>
-    <h2>Transactions</h2>
 
-    <div class="filter-form">
-        <form method="get" id="filter-form">
-            <div class="row pb-3 al">
-                <div class="col-sm-4 ">{{ filter_form.transaction_type }}</div>
-                <div class="col-sm-4">{{ filter_form.transaction_category }}</div>
+    <div style="padding: 50px; display: flex; flex-direction: column; align-items: center;">
+        <p style="margin: 0px;">Your Balance</p>
+        <h2 style="font-size: 56px;">£{{user.account.balance}}</h2>
+    </div>
+
+
+    <h2>Transactions</h2>
+    <div class="filter-form container">
+        <form  class="row g-2" method="get" id="filter-form">
+            
+            <div class="col-sm-6">
+                <label class="text-sm">Filter By Type</label>
+                {{ filter_form.transaction_type }}
+            </div>
+            <div class="col-sm-6">
+                <label class="text-sm">Filter By Category</label>
+                {{ filter_form.transaction_category }}
+            </div>
+        
+            <div class="col-sm-6">
+                <label class="text-sm">Transaction Since</label>
+                {{ filter_form.start_date }}    
+            </div>
+            <div class="col-sm-6">
+                <label class="text-sm">Transaction Until</label>
+                {{ filter_form.end_date }}   
+            </div>
+            <div class="col-sm-6">
+                {{ filter_form.min_amount }}  
+            </div>
+            <div class="col-sm-6">
+                {{ filter_form.max_amount }}  
             </div>
             
-            {{ filter_form.start_date }}
-            {{ filter_form.end_date }}
-            {{ filter_form.min_amount }}
-            {{ filter_form.max_amount }}
-            <button type="submit" >Filter</button>
-            <button type="button" onclick="clearForm()">Clear</button>
+            <div class="d-flex justify-content-between" >
+                <button class="btn btn-outline-primary btn-sm " type="submit" >Filter</button>
+                <button class="btn btn-outline-danger btn-sm " type="button" onclick="clearForm()">Clear</button>
+            </div>
         </form>
     </div>
 
 
 
-    <div>
-        <table>
-            <tr>
-                <th>Type</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Balance After Transaction</th>
-                <th>Date</th>
-            </tr>
-            {% for transaction in transactions %}
-            <tr>
-                <td>{{ transaction.get_transaction_type_display }}</td>
-                <td>{{ transaction.get_transaction_category_display }}</td>   
-                <td>{{ transaction.amount }}</td>
-                <td>{{ transaction.balance_after_transaction }}</td>
-                <td>{{ transaction.timestamp }}</td>  
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No transactions found</td> 
-            </tr>
+    <div style="padding: 50px;">
+        <table  class="table" id="transaction-table" style="color: whitesmoke;">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th>Date</th>
+                    <th>Recipient</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in page_obj %}
+                <tr>
+                    <td>{{ transaction.id}}</td>
+                    <td>{{ transaction.timestamp }}</td>
+                    <td>{{transaction.destination_account.user.first_name}} {{transaction.destination_account.user.last_name}} </td>
+                    <td>{{ transaction.get_transaction_type_display }}</td>
+                    <td>{{ transaction.get_transaction_category_display }}</td>   
+                    <td>{{ transaction.amount }}</td>
+                    
+                {% empty %}
+                <tr>
+                    <td colspan="4">No transactions found</td> 
+                </tr>
             {% endfor %}
+            </tbody>
         </table>
+        
+        <div class="row">
+            <div class="col text-center">
+                <button id="load-more-button" class="btn btn-dark" onclick="loadMoreTransactions()">Load More</button> 
+            </div>
+        </div>
+
     </div>
 </div>
 {% endblock %}
@@ -99,6 +134,46 @@
             }
 
         filterForm.submit()
-}
+    }
+
+    let currentPage = 1;
+
+    function loadMoreTransactions() {
+        currentPage++;  
+        const filterForm = $("#filter-form");  
+        const formData = filterForm.serialize();
+
+
+        $.ajax({
+            url: "{% url 'banking:transactions_ajax' %}",  
+            data: `${formData}&page=${currentPage}`,  
+            success: function(response) {
+                const transactions = response.transactions;  
+                const has_next = response.has_next;  
+                    
+                const tbody = $('#transaction-table tbody'); 
+                transactions.forEach(transaction => {
+                    const row = `<tr>
+                        <td>${transaction.id}</td>
+                        <td>${transaction.timestamp}</td>
+                        <td>${transaction.destination_user}</td>  <!-- First and last name of the destination user -->
+                        <td>${transaction.transaction_type_display}</td>  <!-- Human-readable type -->
+                        <td>${transaction.transaction_category_display}</td>  <!-- Human-readable category -->
+                        <td>${transaction.amount}</td>
+                    </tr>`;
+                    tbody.append(row); 
+                });
+
+                   
+                if (!has_next) {
+                    $('#load-more-button').hide();
+                }
+            },
+            error: function(error) {
+                console.error("Error loading more transactions:", error);  // Log any errors
+            }
+        });
+    }
+
 </script>
 {% endblock %}

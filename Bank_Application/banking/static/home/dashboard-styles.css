@@ -2,7 +2,7 @@
     max-width: 1280px;
     min-height: 85vh;  /* Use viewport height for minimum height */
     height: 100%;
-    padding-top: 150px;
+    padding-top: 125px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -12,5 +12,5 @@
 .filter-form{
     max-width: 800px;
     width: 65vw;
-    
 }
+
