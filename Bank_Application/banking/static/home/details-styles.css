@@ -4,7 +4,7 @@
     min-height: 85vh;  /* Use viewport height for minimum height */
     height: 100%;
     margin: 0 auto;
-    padding-top: 100px;
+    padding-top: 125px;
     padding-left: 50px;
     display: flex;
     flex-direction: column;
@@ -15,10 +15,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-top: 40px;
 
 
 }
-
 
 .details-container-right{
     display: flex;

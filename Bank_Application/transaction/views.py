@@ -4,41 +4,53 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, logout
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
-from .forms import UserUpdateForm, DepositForm, WithdrawalForm, TransferForm
+from .forms import UserEditForm, PasswordsChangeForm, DepositForm, WithdrawalForm, TransferForm
 from django.contrib import messages
 from django.urls import reverse_lazy
 from .models import Transaction 
 from banking.models import BankAccount
-
+from django.contrib.auth.views import PasswordChangeView
 User = get_user_model()
 
-class UserUpdateView(TemplateView):
-    model = User
-    form_class = UserUpdateForm
-    template_name = 'details.html'
+@login_required
+def UserDetails(request):
+    return render(request,'details.html',{'user': request.user})
 
-    def post(self, request, *args, **kwargs):
-        update_form = UserUpdateForm(self.request.POST)
-        if update_form.is_valid():
-            user = update_form.save()
-            messages.success(
-                self.request,
-                (
-                    f'Thank You For Creating A Bank Account. '
-                )   
-            )
-        else: 
-            messages.error(request, "Error")
-        return self.render_to_response(self.get_context_data(update_form=update_form))
-        
-    def get_context_data(self, **kwargs):
-        if 'update_form' not in kwargs:
-            kwargs['update_form'] = UserUpdateForm()
-        return super().get_context_data(**kwargs)
+class PasswordsChangeView(PasswordChangeView):
+    form_class = PasswordsChangeForm
+    success_url = reverse_lazy('transaction:details')
+    template_name = "change-password.html"
+
+
+@login_required
+def UpdateUserDetails(request):
+    current_user = User.objects.get(email=request.user.email)
+    form = UserEditForm(request.POST or None, instance=current_user)
+
+    if form.is_valid():
+        form.save()
+        return redirect('transaction:details')
+
+    return render(request,'change-details.html',{'user': request.user, 'form': form})
     
+
+@login_required
+def UserDeleteAccount(request):
+    if request.method == 'POST':
+        user = request.user
+        confirm = request.POST.get("confirm_delete", False)
+        if confirm:
+            user.is_active = False
+            user.save()
+            return redirect('banking:home')
+        else:
+            return redirect('transaction:details')
+    
+    return (render(request, 'delete-user.html'))
+
 
 @login_required
 def UserTransactionView(request):

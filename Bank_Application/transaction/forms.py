@@ -1,27 +1,42 @@
 from django import forms
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from banking.models import User
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import make_password
 from .models import Transaction , BankAccount
 from django.db import transaction
 from django.forms import NumberInput
 
-class UserUpdateForm(UserCreationForm):
-    birth_date = forms.DateField(input_formats=['%Y-%m-%d'])
+class UserPersonalInfoUpdateForm(forms.Form):
+
+    first_name = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'})                         
+    )
+
+class UserEditForm(UserChangeForm):
+    password = None
 
     class Meta:
         model = User
-        fields = [
-            'first_name',
-            'last_name',
-            'email',
-            'password1',
-            'password2',
-            'phone_number',
-            'city',
-            'address',
-            'postcode',
-        ]
+        fields = ('email', 'first_name' , 'middle_name' , 'last_name' ,'phone_number', 'city' , 'address', 'postcode')
+
+class PasswordsChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control col-sm-6', 'type' : 'password'})
+    )
+    new_password1 = forms.CharField(
+        label='New Password',
+        widget=forms.PasswordInput(attrs={'class': 'form-control col-sm-6', 'type' : 'password'})
+    )
+    new_password2 = forms.CharField(
+        label='Confrim New Password',
+        widget=forms.PasswordInput(attrs={'class': 'form-control col-sm-6', 'type' : 'password' })
+    )
+    class Meta:
+        model = User
+        fields = ('old_password', 'new_password1', 'new_password2')
 
 
 class TransactionFilterForm(forms.Form):
