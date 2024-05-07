@@ -58,8 +58,8 @@ class Transaction(models.Model):
 
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def str(self):
-        return f"{self.transaction_id} - {self.account.account_number} - {self.category.name} - {self.amount}"
+    def __str__(self):
+        return f"{self.transaction_id} - {self.account.account_number} - {self.get_transaction_category_display()} - {self.amount:.2f}"
 
     class Meta:
         ordering = ['timestamp']
