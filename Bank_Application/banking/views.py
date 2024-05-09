@@ -1,16 +1,14 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
-from django.contrib.auth import get_user_model, authenticate ,logout
+from django.contrib.auth import get_user_model,logout
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.shortcuts import HttpResponseRedirect
 from .forms import UserRegistrationForm
 from transaction.forms import TransactionFilterForm
-from django.http import Http404
 from django.urls import reverse_lazy
-from .models import BankAccount
 from transaction.models import Transaction
 from django.core.paginator import Paginator
 from django.http import JsonResponse

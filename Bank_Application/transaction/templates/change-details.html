@@ -30,7 +30,12 @@
             <form method="POST">
                 {% csrf_token %}
                 {{form.as_p}}
-                <button type="submit" >Update</button>
+                
+                <div class="d-flex justify-content-between">
+                    <button type="submit" >Update</button>
+                    <a href="{% url 'transaction:details' %}" class="btn btn-dark" >Cancel</a>
+                </div>
+                
             </form>
 
         </div>

@@ -1,18 +1,15 @@
-from django.forms import BaseModelForm
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login, logout
-from django.views.generic import TemplateView
-from django.views.generic.edit import CreateView
+from django.contrib.auth import get_user_model
 from .forms import UserEditForm, PasswordsChangeForm, DepositForm, WithdrawalForm, TransferForm
 from django.contrib import messages
 from django.urls import reverse_lazy
-from .models import Transaction 
 from banking.models import BankAccount
 from django.contrib.auth.views import PasswordChangeView
+
+
 User = get_user_model()
 
 @login_required

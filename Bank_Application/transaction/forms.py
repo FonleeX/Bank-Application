@@ -1,11 +1,7 @@
 from django import forms
-from django.conf import settings
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from banking.models import User
-from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import make_password
 from .models import Transaction , BankAccount
-from django.db import transaction
 from django.forms import NumberInput
 
 class UserPersonalInfoUpdateForm(forms.Form):
