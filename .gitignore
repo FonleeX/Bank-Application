@@ -1,11 +1,6 @@
-#ignore python env
-.env
 
-#ignore python cache
-.__pycache__
-
-#ignore python venv
-.venv
-
-#ignore python cache
 /Bank_Application/Bank_Application/__pycache__
+/Bank_Application/banking/__pycache__
+/Bank_Application/banking/migrations/__pycache__
+/Bank_Application/transaction/__pycache__/
+/Bank_Application/transaction/migrations/__pycache__/

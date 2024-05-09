@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<title>Simpler Banking Details</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'home\details-styles.css' %}">
+{% endblock %}
+
+{% block header%}
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <h1>Simpler Banking</h1>
+                <a  class="header-button" href="{% url 'banking:dashboard' %}" >Account</a>
+                <a  class="header-button" href="{% url 'transaction:payments' %}" >Payments</a>
+            </div>
+            <div class="header-right">
+                <a  class="header-button" href="{% url 'banking:logout' %}" >Log Out</a>
+                <a  class="header-button" href="{% url 'transaction:details' %}" >Profile</a>
+                
+            </div>
+        </div>
+    </header>
+    {% endblock %}
+
+{% block main %}
+<div class = "details-main">
+    <h1 >Account Details</h1>
+    <div class = "details-container">
+        <div class="details-container-left pt-4">
+            <h2>Profile Details</h2>
+            <div class="container pt-3 pb-4">
+                <div class="row pb-4">
+                    <div class="pb-3">
+                        <label for="name">Name:</label>
+                        {{user.first_name}} 
+                        {% if user.middle_name %}
+                            {{ user.middle_name }}
+                        {% endif %}
+                        {{user.last_name}}
+                    </div>
+                    <div  class="pb-3">
+                        <label for="phone">Phone:</label>
+                        {{user.phone_number}}
+                    </div>
+                    <div  class="pb-3">
+                        <label for="address">Address:</label>
+                        {{user.address}}, {{user.city}}, {{user.postcode}}
+                    </div>
+                    <div  class="pb-3">  
+                        <a href="{% url 'transaction:change-details' %}" class="btn btn-sm btn-dark">Edit Personal Information</a>
+                    </div>
+
+                </div>
+
+                <div class="row pb-4">
+                    <div  class="pb-3">
+                        <label for="email">Email:</label>
+                        {{user.email}}
+                    </div>
+                    <div  class="pb-3">
+                        <label for="password">Password:</label>
+                        ***********
+                    </div>
+                    <div class="pb-3">  
+                        <a href="{% url 'transaction:change-password' %}" class="btn btn-sm btn-dark">Edit Password Information</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="details-container-right">
+            <h2>Bank Details</h2>
+            <p style="text-transform: capitalize;">Account Type:    {{user.account.account_type}}
+            <p>Account Number:    {{user.account.account_number}}</p>
+            <p>Account Sort-Code:    {{user.account.account_sort_code}}</p>
+            <a href="{% url 'transaction:delete-user' %}" class="btn btn-danger" style="width: 250px;">Delete Account</a>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

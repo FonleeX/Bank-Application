@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        
+    </style>
+    <link rel="icon" type="image/png" href="{% static 'home\bank-building.png' %}">
+    {% block head %}
+    <title>Base Simpler Banking</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'home\styles.css' %}">
+    {% endblock %}
+</head>
+<body>
+    {% block header%}
+    <header>
+        <div class="header-container">
+            <div class="header-left">
+                <a style="font-family: 'Garamond', serif; font-weight: 700; font-size: min(3.6vw, 32px); text-decoration: none; color: #cc7df3;" href="{% url 'banking:home' %}" >Simpler Banking</a></h1>
+            </div>
+            <div class="header-right">
+                <a class="header-button" href="{% url 'banking:login' %}" >Login</a>
+                <a class="header-button" href="{% url 'banking:register' %}" >Register</a>
+                
+            </div>
+        </div>
+    </header>
+    {% endblock %}
+    {% block main %}
+    <div class = "main">
+        <div class="main-container-left">
+            <h1>This is a Base Page</h1>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+{% block javascript %}
+
+{% endblock %}
+</html>
